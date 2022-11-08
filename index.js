@@ -22,6 +22,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         const serviceCollection = client.db('snapKitchen').collection('services')
+        const reviewCollection = client.db('snapKitchen').collection('reviews')
         app.get('/services', async (req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query)
@@ -43,6 +44,12 @@ async function run() {
             res.send(singleService)
         })
 
+
+        app.post('/reviews', async (req, res) => {
+            const review = req.body
+            const result = await reviewCollection.insertOne(review)
+            res.send(result)
+        })
 
     }
     finally {
