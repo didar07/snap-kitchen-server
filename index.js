@@ -47,7 +47,7 @@ async function run() {
         })
 
 
-
+        // for threee services
         app.get('/services', async (req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query)
@@ -55,6 +55,7 @@ async function run() {
             res.send(services)
         })
 
+        // for all services
         app.get('/allservice', async (req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query)
@@ -62,7 +63,7 @@ async function run() {
             res.send(services)
         })
 
-
+        // services api 
         app.post('/allservice', async (req, res) => {
             const service = req.body
             const result = await serviceCollection.insertOne(service)
@@ -70,7 +71,7 @@ async function run() {
         })
 
 
-
+        // for single services
         app.get('/allservice/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
@@ -79,19 +80,17 @@ async function run() {
         })
 
 
+        // get all reviews
         app.get('/reviews', async (req, res) => {
             const query = {}
             const cursor = reviewCollection.find(query)
+            // sort({reviews: -1})
             const reviews = await cursor.toArray()
             res.send(reviews)
         })
 
+        // my reviews only user can see
         app.get('/myreviews', async (req, res) => {
-            // const decoded = req.decoded
-            // console.log('inside review', decoded)
-            // if (decoded.email !== req.query.email) {
-            //     res.status(403).send({ message: 'forbidden access' })
-            // }
 
             let query = {}
             if (req.query.email) {
@@ -104,6 +103,24 @@ async function run() {
             res.send(myreviews)
         })
 
+
+        // for update the review
+        app.patch('/myreviews/:id', async (req, res) => {
+            const id = req.params.id
+            const message = req.body.message
+            const query = { _id: ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    message: message
+                }
+            }
+            const result = await reviewCollection.updateOne(query, updatedDoc)
+            res.send(result)
+
+
+        })
+
+        // for delete the review
         app.delete('/myreviews/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
@@ -112,7 +129,7 @@ async function run() {
         })
 
 
-
+        // review api 
         app.post('/reviews', async (req, res) => {
             const review = req.body
             const result = await reviewCollection.insertOne(review)
