@@ -83,10 +83,14 @@ async function run() {
 
         // get all reviews
         app.get('/reviews', async (req, res) => {
-            const query = {}
-            const cursor = reviewCollection.find(query)
-            // sort({reviews: -1})
 
+            let query = {}
+            if (req.query.service_id) {
+                query = {
+                    service_id: req.query.service_id
+                }
+            }
+            const cursor = reviewCollection.find(query)
             const reviews = await cursor.toArray()
             const newReview = reviews.reverse()
             res.send(newReview)
