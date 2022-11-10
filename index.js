@@ -40,6 +40,7 @@ async function run() {
         const serviceCollection = client.db('snapKitchen').collection('services')
         const reviewCollection = client.db('snapKitchen').collection('reviews')
 
+        // JWT token access
         app.post('/jwt', (req, res) => {
             const user = req.body
             const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' })
@@ -85,8 +86,10 @@ async function run() {
             const query = {}
             const cursor = reviewCollection.find(query)
             // sort({reviews: -1})
+
             const reviews = await cursor.toArray()
-            res.send(reviews)
+            const newReview = reviews.reverse()
+            res.send(newReview)
         })
 
         // my reviews only user can see
